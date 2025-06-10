@@ -1,46 +1,37 @@
 ﻿// Zasada segregacji interfejsów (Interface Segregation Principle) – ISP
 // Kod nie powinien być zmuszany do polegania na metodach, których nie używa.
-// Podział interfejsów
+// Przykład łamiący zasadę segregacji interfejsów
 
-var atm = new SecondATM(1000);
+#if false
+
+IATM atm = new SecondATM(1000);
 
 atm.Withdraw(100);
 
-if (atm is IDeposit deposit)
-{
-    deposit.Deposit(50);
-}
-else
-{
-    Console.WriteLine("Brak możliwości wpłaty");
-}
+atm.Deposit(50);
 
 var balance = atm.CheckBalance();
 
 Console.WriteLine(balance);
 
-[Obsolete]
-public interface IATM : IWidthdraw, IDeposit, IBalance
-{
-}
 
-public interface IWidthdraw
+// Złe podejście – wymuszanie nieużywanych metod:
+public interface IATM
 {
     bool Withdraw(decimal amount); // Wypłata
-}
-
-public interface IDeposit
-{
     void Deposit(decimal amount); // Wpłata
-}
-
-public interface IBalance
-{
     decimal CheckBalance();
 }
 
-public abstract class ATM(decimal balance) : IWidthdraw, IDeposit, IBalance // primary constructor
+public class FirstATM : IATM
 {
+    private decimal balance;
+
+    public FirstATM(decimal initialBalance)
+    {
+        balance = initialBalance;
+    }
+
     public decimal CheckBalance()
     {
         return balance;
@@ -74,16 +65,38 @@ public abstract class ATM(decimal balance) : IWidthdraw, IDeposit, IBalance // p
     }
 }
 
-public class FirstATM(decimal initialBalance) : ATM(initialBalance), IWidthdraw, IDeposit, IBalance // primary constructor
+public class SecondATM : IATM
 {
-}
+    private decimal balance;
 
-public class SecondATM : ATM, IWidthdraw, IBalance
-{
     public SecondATM(decimal initialBalance)
-        : base(initialBalance)
     {
+        balance = initialBalance;
+    }
+
+    public decimal CheckBalance()
+    {
+        return balance;
+    }
+
+    public void Deposit(decimal amount)     // <-- problem, wymuszenie nieużywanych mnetod
+    {
+        throw new NotSupportedException();
+    }
+
+    public bool Withdraw(decimal amount)
+    {
+        if (amount > 0 && amount <= balance)
+        {
+            balance -= amount;
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("Insufficient funds or invalid amount.");
+            return false;
+        }
     }
 }
 
-
+#endif

@@ -5,19 +5,47 @@
 // bez modyfikowania kodu źródłowego.
 
 
+var discountsA = new Dictionary<string, decimal>
+{
+    ["Regular"] = 0.9m,
+    ["Premium"] = 0.8m,
+    ["VIP"] = 0.5m,
+};
 
-DiscountCalculator calculator = new DiscountCalculator();
+var discountsB = new Dictionary<string, decimal>
+{
+    ["Regular"] = 0.7m,
+    ["Premium"] = 0.6m,
+    ["VIP"] = 0.4m,
+};
+
+DiscountCalculator calculator = new DiscountCalculator(discountsA);
 
 var discount = calculator.CalculateDiscount("Regular", 10);
 
+Console.WriteLine(discount);
 
-// Złe podejście – każda nowa zniżka wymaga modyfikacji:
-public class DiscountCalculator
-{
+// Dobre podejście – otwarte na rozszerzenie a zamknięci na modyfikację ("działa? - nie tykaj!")
+public class DiscountCalculator(IDictionary<string, decimal> discounts) // primary constructr
+{ 
     public decimal CalculateDiscount(string customerType, decimal total)
     {
-        if (customerType == "Regular") return total * 0.9m;
-        if (customerType == "Premium") return total * 0.8m;
-        return total;
+        return total * discounts[customerType];
+    }
+}
+
+// stara wersja z ręcznie zapis. konstruktorem
+public class DiscountCalculatorOld
+{
+    private IDictionary<string, decimal> discounts;
+
+    public DiscountCalculatorOld(IDictionary<string, decimal> discounts)
+    {
+        this.discounts = discounts;
+    }
+
+    public decimal CalculateDiscount(string customerType, decimal total)
+    {
+        return total * discounts[customerType];
     }
 }

@@ -3,33 +3,59 @@
 // Każda klasa powinna być odpowiedzialna za jedną konkretną rzecz.
 // Klasa powinna mieć tylko jeden powód do zmiany.
 
-// #1 Przykład łamiący zasadę pojedynczej odpowiedzialności
-
-using System.Reflection;
-
 class Customer
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string City { get; set; }
-    public string PostCode { get; set; }
-    public string Street { get; set; }
-    public string Email { get; set; }
+    public Address WorkAddress { get; set; }
+    public Address HomeAddress { get; set; }
 
-    public void ValidateEmail(string email)
+    public override string ToString()
+    {
+        return $"{FirstName} {LastName} {WorkAddress?.ToString()} {HomeAddress?.ToString()}";
+    }
+
+    public string Email { get; set; }
+  
+   
+}
+
+interface IValidator
+{
+    void Validate(string value);
+}
+
+class EmailValidator : IValidator
+{
+    public void Validate(string email)
     {
         if (!email.Contains("@") || !email.Contains("."))
         {
             throw new FormatException("Email address is a invalid format!");
         }
     }
+}
 
-    public void ValidatePostCode(string postcode)
+class PostcodeValidator : IValidator
+{
+    public void Validate(string postcode)
     {
         if (postcode.Length != 5)
         {
             throw new FormatException("Post code is a invalid format!");
         }
+    }
+}
+
+class Address
+{
+    public string City { get; set; }
+    public string PostCode { get; set; }
+    public string Street { get; set; }
+
+    public override string ToString()
+    {
+        return $"{City} {Street} {PostCode}";
     }
 }
 

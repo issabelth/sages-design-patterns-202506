@@ -4,6 +4,13 @@
 // Oznacza to, że taka klasa pozwala na rozszerzenie swojego zachowania
 // bez modyfikowania kodu źródłowego.
 
+
+
+DiscountCalculator calculator = new DiscountCalculator();
+
+var discount = calculator.CalculateDiscount("Regular", 10);
+
+
 // Złe podejście – każda nowa zniżka wymaga modyfikacji:
 public class DiscountCalculator
 {

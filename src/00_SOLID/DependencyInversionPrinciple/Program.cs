@@ -3,18 +3,35 @@
 // Oznacza to, że w kodzie powinny być używane interfejsy lub klasy abstrakcyjne, zamiast bezpośrednio operować na konkretnych klasach.
 
 
-EmailSender sender = new EmailSender();
-sender.Send("Hello, World!");
+IMessageSender sender = new ColorConsoleSender();
+
+NotificationService notificationService = new NotificationService(sender);
+notificationService.Notify("Hello, World!");
 
 
-//  Złe podejście – zależność od konkretnej implementacji:
-public class EmailSender
+//  Dobre podejście – nie zależymy od konkretnej implementacji:
+public class EmailSender : IMessageSender
 {
     public void Send(string message) => Console.WriteLine($"Sending email: {message}");
 }
 
-public class NotificationService
+public class ColorConsoleSender : IMessageSender
 {
-    private EmailSender _sender = new EmailSender();
-    public void Notify(string msg) => _sender.Send(msg);
+    public void Send(string message)
+    {
+        Console.BackgroundColor = ConsoleColor.DarkGreen;
+        Console.WriteLine($"Sending console: {message}");
+        Console.ResetColor();
+    }
+}
+
+public interface IMessageSender
+{
+    void Send(string message);
+}
+
+
+public class NotificationService(IMessageSender sender) // Primary Constructor
+{ 
+     public void Notify(string msg) => sender.Send(msg);
 }

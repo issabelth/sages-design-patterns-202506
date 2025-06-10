@@ -27,18 +27,8 @@ Console.WriteLine(discount);
 
 
 // Dobre podejście – otwarte na rozszerzenie a zamknięci na modyfikację ("działa? - nie tykaj!")
-public class DiscountCalculator
+public class DiscountCalculator(IDictionary<string, decimal> discounts)
 {
-    private IDictionary<string, decimal> discounts;
-
-    public DiscountCalculator(IDictionary<string, decimal> discounts)
-    {
-        this.discounts = discounts;
-    }
-
-    public decimal CalculateDiscount(string customerType, decimal total)
-    {
-        return total * discounts[customerType];
-    }
+    public decimal CalculateDiscount(string customerType, decimal total) => total * discounts[customerType];
 }
 

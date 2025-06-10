@@ -46,15 +46,8 @@ public interface IBalance
     decimal CheckBalance();
 }
 
-public abstract class ATM : IWidthdraw, IDeposit, IBalance
+public abstract class ATM(decimal balance) : IWidthdraw, IDeposit, IBalance
 {
-    protected decimal balance;
-
-    protected ATM(decimal balance)
-    {
-        this.balance = balance;
-    }
-
     public decimal CheckBalance()
     {
         return balance;
@@ -88,14 +81,8 @@ public abstract class ATM : IWidthdraw, IDeposit, IBalance
     }
 }
 
-public class FirstATM : ATM, IWidthdraw, IDeposit, IBalance
+public class FirstATM(decimal initialBalance) : ATM(initialBalance), IWidthdraw, IDeposit, IBalance
 {
-    public FirstATM(decimal initialBalance)
-        : base(initialBalance)
-    {
-    }
-
-   
 }
 
 public class SecondATM : ATM, IWidthdraw, IBalance

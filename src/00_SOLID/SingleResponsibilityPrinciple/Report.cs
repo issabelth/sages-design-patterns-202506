@@ -32,53 +32,27 @@ public class Report
     public string Content { get; set; }
 }
 
-
-
 // Abstract
 public interface IReportService
 {
     void Save(Report report);
 }
 
-
 // Concrete A
-public class FileReportService : IReportService
+public class FileReportService(string path) : IReportService
 {
-    private readonly string path;
-
-    public FileReportService(string path)
-    {
-        this.path = path;
-    }
-
-    public void Save(Report report)
-    {
-        SaveToFile(report, path);
-    }
+    public void Save(Report report) => SaveToFile(report, path);
 
     private void SaveToFile(Report report, string path)
     {
         File.WriteAllText(path, $"{report.Title}\n{report.Content}");
     }
-
-
 }
 
-
 // Concrete B
-public class DbReportService : IReportService
+public class DbReportService(string connectionString) : IReportService
 {
-    private readonly string connectionString;
-
-    public DbReportService(string connectionString)
-    {
-        this.connectionString = connectionString;
-    }
-
-    public void Save(Report report)
-    {
-        SaveToDb(report, connectionString);
-    }
+    public void Save(Report report) => SaveToDb(report, connectionString);
 
     private void SaveToDb(Report report, string connectionString)
     {

@@ -22,6 +22,7 @@ if (doc is IEditable editable)
 if (doc is IEncryptable encryptable)
 {
     encryptable.Encrypt();
+    encryptable.Decrypt();
 }
     
 interface IPrintable
@@ -37,6 +38,7 @@ interface IEditable
 interface IEncryptable
 {
     void Encrypt();
+    void Decrypt();
 }
 
 abstract class Document
@@ -57,6 +59,11 @@ class PDFDocument : Document, IPrintable, IEncryptable
     public void Encrypt()
     {
         Console.WriteLine("Encrypting a PDF document...");
+    }
+
+    public void Decrypt()
+    {
+        Console.WriteLine("Decrypting a PDF document...");
     }
 }
 
@@ -85,6 +92,11 @@ class XmlDocument : Document, IPrintable, IEncryptable
     public override void Print()
     {
         Console.WriteLine("Printing a xml document...");
+    }
+
+    public void Decrypt()
+    {
+        Console.WriteLine("Decrypting a xml document...");
     }
 
 

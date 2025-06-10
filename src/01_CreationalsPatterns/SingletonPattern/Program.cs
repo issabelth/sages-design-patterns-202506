@@ -9,6 +9,9 @@ namespace SingletonPattern
         {
             Console.WriteLine("Hello Singleton Pattern!");
 
+
+            LoadBalancerTest();
+
             MessageService messageService = new MessageService();
             messageService.Send("a");
 
@@ -72,7 +75,7 @@ namespace SingletonPattern
 
         private static void LoadBalanceRequestTest(int numberOfRequests)
         {
-            LoadBalancer loadBalancer = new LoadBalancer();
+            LoadBalancer loadBalancer = LoadBalancer.Instance;
 
             for (int i = 0; i < numberOfRequests; i++)
             {

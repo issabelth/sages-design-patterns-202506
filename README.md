@@ -12,5 +12,5 @@ To take this course you'll need the following.
 ## Clone the Course Git Repository
 
 ```
-git clone https://github.com/your-design-patterns
+git clone https://github.com/your-design-patterns](https://github.com/sulmar/sages-design-patterns-202506)
 ```

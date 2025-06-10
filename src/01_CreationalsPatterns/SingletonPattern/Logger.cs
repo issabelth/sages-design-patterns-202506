@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SingletonPattern
 {
-    public class Logger
+    public class Logger : Singleton<Logger>
     {
         private readonly string path = "log.txt";
 

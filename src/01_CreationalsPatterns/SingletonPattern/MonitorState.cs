@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Threading;
 
 namespace SingletonPattern;
 
-public class MonitorState
+public class MonitorState : Singleton<MonitorState>
 {
     private int _enqueued;
     private int _processed;
     private int _sent;
 
-    public void IncrementEnqueued() => _enqueued++;
-    public void IncrementProcessed() => _processed++;
-    public void IncrementSent() => _sent++;
+    public void IncrementEnqueued() => Interlocked.Increment(ref _enqueued);
+    public void IncrementProcessed() => Interlocked.Increment(ref _processed);
+    public void IncrementSent() => Interlocked.Increment(ref _sent);
 
     public void PrintStatus()
     {

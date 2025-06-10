@@ -7,11 +7,30 @@ namespace SingletonPattern
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Singleton Pattern!");           
+            Console.WriteLine("Hello Singleton Pattern!");
 
-            StateMonitorTest();
 
-            // StateMonitorMultiThreadTest();
+            LoadBalancerTest();
+
+            MessageService messageService = new MessageService();
+            messageService.Send("a");
+
+            PrintService printService = new PrintService();
+            printService.Print("b", 2);
+
+            if (object.ReferenceEquals(messageService.logger, printService.logger))
+            {
+                Console.WriteLine("The same instances");
+            }
+            else
+            {
+                Console.WriteLine("Not the same instances");
+            }
+
+
+         //  StateMonitorTest();
+
+            StateMonitorMultiThreadTest();
 
             Console.ReadKey();
         }
@@ -20,7 +39,7 @@ namespace SingletonPattern
         {
             for (int i = 0; i < 3; i++)
             {
-                var state = new MonitorState(); // 🔴 każda iteracja = nowy obiekt
+                var state = MonitorState.Instance; // 🔴 każda iteracja = nowy obiekt
 
                 state.IncrementEnqueued();
                 state.IncrementProcessed();
@@ -35,7 +54,7 @@ namespace SingletonPattern
 
         private static void StateMonitorMultiThreadTest()
         {
-            var state = new MonitorState();
+            var state = MonitorState.Instance;
 
             int iterations = 1_000_000;
 
@@ -56,7 +75,7 @@ namespace SingletonPattern
 
         private static void LoadBalanceRequestTest(int numberOfRequests)
         {
-            LoadBalancer loadBalancer = new LoadBalancer();
+            LoadBalancer loadBalancer = LoadBalancer.Instance;
 
             for (int i = 0; i < numberOfRequests; i++)
             {

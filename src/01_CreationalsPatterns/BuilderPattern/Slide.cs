@@ -16,35 +16,76 @@ namespace BuilderPattern
         }
     }
 
+    // Abstract Builder
+    public interface IPresentationBuilder
+    {
+        void AddSlide(Slide slide);         
+    }
+
+    // Concrete Builder A
+    public class PdfPresentationBuilder : IPresentationBuilder
+    {
+        // Utwórz dokument
+        PdfDocument pdf = new PdfDocument();
+
+        public void AddSlide(Slide slide)
+        {
+            pdf.AddPage(slide.Text);
+        }
+
+        public PdfDocument Build()
+        {
+            return pdf;
+        }
+    }
+
+    public class MoviePresentationBuilder : IPresentationBuilder
+    {
+        // Utwórz dokument
+        Movie movie = new Movie();
+
+        public void AddSlide(Slide slide)
+        {
+            movie.AddFrame(slide.Text, 3);
+        }
+
+        public Movie Build()
+        {
+            return movie;
+        }
+    }
+
+
+    // Nadzorca
+    public class PresentationDirector
+    {
+        private readonly IPresentationBuilder builder;
+
+        public PresentationDirector(IPresentationBuilder builder)
+        {
+            this.builder = builder;
+        }
+
+        public void Build(Presentation presentation)
+        {
+            // Dodaj slajd (nagłówek)
+            builder.AddSlide(new Slide("Copyright"));
+
+            foreach (Slide slide in presentation.slides)
+            {
+                builder.AddSlide(slide);
+            }
+        }
+
+    }
+
     public class Presentation
     {
-        private List<Slide> slides = new List<Slide>();
+        public List<Slide> slides = new List<Slide>();
 
         public void AddSlide(Slide slide)
         {
             slides.Add(slide);
-        }
-
-        public void Export(PresentationFormat format)
-        {
-            if (format == PresentationFormat.PDF)
-            {
-                var pdf = new PdfDocument();
-                pdf.AddPage("Copyright");
-                foreach(Slide slide in slides)
-                {
-                    pdf.AddPage(slide.Text);
-                }                
-            }
-            else if (format == PresentationFormat.Movie)
-            {
-                var movie = new Movie();
-                movie.AddFrame("Copyright", 3);
-                foreach (Slide slide in slides)
-                {
-                    movie.AddFrame(slide.Text, 3);
-                }
-            }
         }
     }
 

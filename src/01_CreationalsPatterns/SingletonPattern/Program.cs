@@ -28,9 +28,9 @@ namespace SingletonPattern
             }
 
 
-          //  StateMonitorTest();
+         //  StateMonitorTest();
 
-            // StateMonitorMultiThreadTest();
+            StateMonitorMultiThreadTest();
 
             Console.ReadKey();
         }
@@ -39,7 +39,7 @@ namespace SingletonPattern
         {
             for (int i = 0; i < 3; i++)
             {
-                var state = new MonitorState(); // 🔴 każda iteracja = nowy obiekt
+                var state = MonitorState.Instance; // 🔴 każda iteracja = nowy obiekt
 
                 state.IncrementEnqueued();
                 state.IncrementProcessed();
@@ -54,7 +54,7 @@ namespace SingletonPattern
 
         private static void StateMonitorMultiThreadTest()
         {
-            var state = new MonitorState();
+            var state = MonitorState.Instance;
 
             int iterations = 1_000_000;
 

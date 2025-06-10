@@ -7,7 +7,14 @@ namespace SingletonPattern
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Singleton Pattern!");           
+            Console.WriteLine("Hello Singleton Pattern!");
+
+            Logger logger1 = new Logger();
+            logger1.LogInformation("a");
+
+            Logger logger2 = new Logger();
+            logger2.LogInformation("b");
+
 
             StateMonitorTest();
 

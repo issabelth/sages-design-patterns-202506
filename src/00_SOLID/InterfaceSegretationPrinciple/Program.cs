@@ -3,13 +3,20 @@
 // Kod nie powinien być zmuszany do polegania na metodach, których nie używa.
 
 
-// Przykład łamiący zasadę segregacji interfejsów
+// Podział interfejsów
 
 IATM atm = new SecondATM(1000);
 
 atm.Withdraw(100);
 
-atm.Deposit(50);
+if (atm is IDeposit deposit)
+{
+    deposit.Deposit(50);
+}
+else
+{
+    Console.WriteLine("Brak możliwości wpłaty");
+}
 
 var balance = atm.CheckBalance();
 
@@ -17,20 +24,35 @@ Console.WriteLine(balance);
 
 
 // Złe podejście – wymuszanie nieużywanych metod:
-public interface IATM
+[Obsolete]
+public interface IATM : IWidthdraw, IDeposit, IBalance
+{
+   
+  
+}
+
+public interface IWidthdraw
 {
     bool Withdraw(decimal amount); // Wypłata
+}
+
+public interface IDeposit
+{
     void Deposit(decimal amount); // Wpłata
+}
+
+public interface IBalance
+{
     decimal CheckBalance();
 }
 
-public class FirstATM : IATM
+public abstract class ATM : IWidthdraw, IDeposit, IBalance
 {
-    private decimal balance;
+    protected decimal balance;
 
-    public FirstATM(decimal initialBalance)
+    protected ATM(decimal balance)
     {
-        balance = initialBalance;
+        this.balance = balance;
     }
 
     public decimal CheckBalance()
@@ -66,37 +88,21 @@ public class FirstATM : IATM
     }
 }
 
-public class SecondATM : IATM
+public class FirstATM : ATM, IWidthdraw, IDeposit, IBalance
 {
-    private decimal balance;
+    public FirstATM(decimal initialBalance)
+        : base(initialBalance)
+    {
+    }
 
+   
+}
+
+public class SecondATM : ATM, IWidthdraw, IBalance
+{
     public SecondATM(decimal initialBalance)
+        : base(initialBalance)
     {
-        balance = initialBalance;
-    }
-
-    public decimal CheckBalance()
-    {
-        return balance;
-    }
-
-    public void Deposit(decimal amount)     // <-- problem, wymuszenie nieużywanych mnetod
-    {
-        throw new NotSupportedException();   
-    }
-
-    public bool Withdraw(decimal amount)
-    {
-        if (amount > 0 && amount <= balance)
-        {
-            balance -= amount;
-            return true;
-        }
-        else
-        {
-            Console.WriteLine("Insufficient funds or invalid amount.");
-            return false;
-        }
     }
 }
 

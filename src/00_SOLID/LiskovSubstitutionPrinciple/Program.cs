@@ -2,6 +2,8 @@
 // Zasada Liskov mówi o tym, że obiekt klasy pochodnej może być używany zamiennie
 // w miejscu obiektu klasy bazowej, nie wprowadzając nieoczekiwanych zachowań.
 
+using System.Security.Principal;
+
 Document doc1 = new PDFDocument();
 Document doc2 = new TextDocument();
 Document doc3 = new XmlDocument();
@@ -100,4 +102,43 @@ class XmlDocument : Document, IPrintable, IEncryptable
     }
 
 
+}
+
+interface IPerson
+{
+    string FirstName { get; set; }
+    string LastName { get; set; }
+
+    void DoWork();
+}
+
+class Customer : IPerson, IPrintable
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string TaxNumber  { get; set; }
+
+    public void DoWork()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Print()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+class Employee : IPerson
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public decimal Salary { get; set; }
+
+    public void DoWork()
+    {
+        throw new NotImplementedException();
+    }
 }

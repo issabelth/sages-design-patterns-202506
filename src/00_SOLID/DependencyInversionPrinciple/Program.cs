@@ -3,6 +3,10 @@
 // Oznacza to, że w kodzie powinny być używane interfejsy lub klasy abstrakcyjne, zamiast bezpośrednio operować na konkretnych klasach.
 
 
+EmailSender sender = new EmailSender();
+sender.Send("Hello, World!");
+
+
 //  Złe podejście – zależność od konkretnej implementacji:
 public class EmailSender
 {

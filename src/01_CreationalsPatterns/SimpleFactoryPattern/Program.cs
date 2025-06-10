@@ -13,7 +13,7 @@ namespace SimpleFactoryPattern
             VisitCalculateAmountTest();
         }
 
-       
+
 
         private static void VisitCalculateAmountTest()
         {
@@ -33,13 +33,7 @@ namespace SimpleFactoryPattern
 
                     decimal totalAmount = visit.CalculateCost();
 
-                    if (totalAmount == 0)
-                        Console.ForegroundColor = ConsoleColor.Green;
-                    else
-                       if (totalAmount >= 200)
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    else
-                        Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColorFactory.Create(totalAmount);
 
                     Console.WriteLine($"Total amount {totalAmount:C2}");
 
@@ -49,4 +43,15 @@ namespace SimpleFactoryPattern
 
         }
     }
+}
+
+
+public class ConsoleColorFactory
+{
+    public static ConsoleColor Create(decimal amount) => amount switch
+    {
+        0 => ConsoleColor.Green,
+        >= 200 => ConsoleColor.Red,
+        _ => ConsoleColor.White,
+    };
 }

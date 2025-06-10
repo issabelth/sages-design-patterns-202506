@@ -9,14 +9,23 @@ namespace SingletonPattern
         {
             Console.WriteLine("Hello Singleton Pattern!");
 
-            Logger logger1 = new Logger();
-            logger1.LogInformation("a");
+            MessageService messageService = new MessageService();
+            messageService.Send("a");
 
-            Logger logger2 = new Logger();
-            logger2.LogInformation("b");
+            PrintService printService = new PrintService();
+            printService.Print("b", 2);
+
+            if (object.ReferenceEquals(messageService.logger, printService.logger))
+            {
+                Console.WriteLine("The same instances");
+            }
+            else
+            {
+                Console.WriteLine("Not the same instances");
+            }
 
 
-            StateMonitorTest();
+          //  StateMonitorTest();
 
             // StateMonitorMultiThreadTest();
 

@@ -6,7 +6,7 @@
 
         public MessageService()
         {
-            logger = new Logger();
+            logger = Logger.Instance;
         }
 
         public void Send(string message)

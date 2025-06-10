@@ -6,7 +6,7 @@
 
         public PrintService()
         {
-            logger = new Logger();
+            logger = Logger.Instance;
         }
 
         public void Print(string content, int copies)

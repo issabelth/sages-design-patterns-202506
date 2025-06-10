@@ -19,7 +19,7 @@ namespace SimpleFactoryPattern
         {
             while (true)
             {
-                Console.Write("Podaj rodzaj wizyty: (N)FZ (P)rywatna (F)irma: ");
+                Console.Write("Podaj rodzaj wizyty: (N)FZ (P)rywatna (F)irma (T)eleporada:");
                 string visitType = Console.ReadLine();
 
                 Console.Write("Podaj czas wizyty w minutach: ");
@@ -27,9 +27,11 @@ namespace SimpleFactoryPattern
                 {
                     TimeSpan duration = TimeSpan.FromMinutes(minutes);
 
-                    Visit visit = new Visit(duration, 100);
+                    VisitFactory factory = new VisitFactory();
 
-                    decimal totalAmount = visit.CalculateCost(visitType);
+                    Visit visit = factory.Create(visitType, duration, 100);
+
+                    decimal totalAmount = visit.CalculateCost();
 
                     if (totalAmount == 0)
                         Console.ForegroundColor = ConsoleColor.Green;

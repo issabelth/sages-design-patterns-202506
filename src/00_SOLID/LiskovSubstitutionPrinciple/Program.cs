@@ -2,15 +2,44 @@
 // Zasada Liskov mówi o tym, że obiekt klasy pochodnej może być używany zamiennie
 // w miejscu obiektu klasy bazowej, nie wprowadzając nieoczekiwanych zachowań.
 
-// Przykład łamiący zasadę podstawiania Liskov
-
 Document doc1 = new PDFDocument();
 Document doc2 = new TextDocument();
+Document doc3 = new XmlDocument();
 
-doc1.Print();  
-((TextDocument)doc2).Edit();  // <-- to łamie zasadę, bo kod kliencki uzależnia się od konkretnego typu.
+Document doc = doc2;
 
-class Document
+if (doc is IPrintable printable)
+{
+    printable.Print();
+}
+
+
+if (doc is IEditable editable)
+{
+    editable.Edit();
+}
+
+if (doc is IEncryptable encryptable)
+{
+    encryptable.Encrypt();
+}
+    
+interface IPrintable
+{
+    void Print();
+}
+
+interface IEditable
+{
+    void Edit();
+}
+
+interface IEncryptable
+{
+    void Encrypt();
+}
+
+abstract class Document
 {
     public virtual void Print()
     {
@@ -18,7 +47,7 @@ class Document
     }
 }
 
-class PDFDocument : Document
+class PDFDocument : Document, IPrintable, IEncryptable
 {
     public override void Print()
     {
@@ -28,10 +57,10 @@ class PDFDocument : Document
     public void Encrypt()
     {
         Console.WriteLine("Encrypting a PDF document...");
-    }    
+    }
 }
 
-class TextDocument : Document
+class TextDocument : Document, IPrintable, IEditable
 {
     public override void Print()
     {
@@ -41,6 +70,21 @@ class TextDocument : Document
     public void Edit()
     {
         Console.WriteLine("Editing a document...");
+    }
+
+
+}
+
+class XmlDocument : Document, IPrintable, IEncryptable
+{
+    public void Encrypt()
+    {
+        Console.WriteLine("Encrypt xml");
+    }
+
+    public override void Print()
+    {
+        Console.WriteLine("Printing a xml document...");
     }
 
 

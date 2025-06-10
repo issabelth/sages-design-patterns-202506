@@ -5,7 +5,7 @@
 
 // Podział interfejsów
 
-IATM atm = new SecondATM(1000);
+var atm = new SecondATM(1000);
 
 atm.Withdraw(100);
 

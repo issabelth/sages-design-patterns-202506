@@ -1,3 +1,4 @@
+# do testowania: https://labelary.com/viewer.html
 # Drukarka etykiet ZPL
 
 ## Opis

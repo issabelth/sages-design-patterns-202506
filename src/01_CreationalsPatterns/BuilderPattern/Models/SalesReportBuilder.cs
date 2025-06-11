@@ -41,6 +41,8 @@ internal class SalesReportBuilder
 
     private IEnumerable<Order> _orders;
 
+    private List<Action<SalesReport>> _buildSteps = [];
+
     public SalesReportBuilder(IEnumerable<Order> orders)
     {
         _orders = orders;
@@ -49,34 +51,46 @@ internal class SalesReportBuilder
 
     public SalesReportBuilder AddHeader(string title)
     {
+        AddHeaderStep(title);
+
+        return this;
+    }
+
+    private void AddHeaderStep(string title)
+    {
         salesReport.Title = title;
         salesReport.CreateDate = DateTime.Now;
         salesReport.TotalSalesAmount = _orders.Sum(s => s.Amount);
-
-        return this;
     }
 
     public SalesReportBuilder AddSectionProductDetails()
     {
-        salesReport.ProductDetails = _orders
-            .SelectMany(o => o.Details)
-            .GroupBy(o => o.Product)
-            .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
+        AddSectionProductDetailsStep();
 
         return this;
+    }
+
+    private void AddSectionProductDetailsStep()
+    {
+        salesReport.ProductDetails = _orders
+                    .SelectMany(o => o.Details)
+                    .GroupBy(o => o.Product)
+                    .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
     }
 
     public SalesReportBuilder AddSectionGenderDetails()
     {
-        salesReport.GenderDetails = _orders
-            .GroupBy(o => o.Customer.Gender)
-            .Select(g => new GenderReportDetail(g.Key, g.Count(), g.Sum(p => p.Amount)));
-
+        AddSectionGenderDetailsStep();
 
         return this;
     }
 
-
+    private void AddSectionGenderDetailsStep()
+    {
+        salesReport.GenderDetails = _orders
+            .GroupBy(o => o.Customer.Gender)
+            .Select(g => new GenderReportDetail(g.Key, g.Count(), g.Sum(p => p.Amount)));
+    }
 
     public SalesReport Build()
     {

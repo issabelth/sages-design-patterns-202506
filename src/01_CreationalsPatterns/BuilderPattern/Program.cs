@@ -11,6 +11,19 @@ namespace BuilderPattern
         {
             Console.WriteLine("Hello Builder Pattern!");
 
+            // PresentationBuilderTest();
+
+            //PhoneTest();
+
+             SalesReportTest();
+
+            // PersonTest();
+
+            // RoomTest();
+        }
+
+        private static void PresentationBuilderTest()
+        {
             Presentation presentation = new Presentation();
             presentation.AddSlide(new Slide("a"));
             presentation.AddSlide(new Slide("b"));
@@ -22,14 +35,6 @@ namespace BuilderPattern
             director.Build(presentation);
 
             var product = presentationBuilder.Build();
-
-            //PhoneTest();
-
-            // SalesReportTest();
-
-            // PersonTest();
-
-            // RoomTest();
         }
 
         private static void RoomTest()
@@ -87,6 +92,11 @@ namespace BuilderPattern
                 .SelectMany(o => o.Details)
                 .GroupBy(o => o.Product)
                 .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
+
+
+            salesReport.GenderDetails = orders
+                .GroupBy(o => o.Customer.Gender)
+                .Select( g => new GenderReportDetail(g.Key, g.Count(), g.Sum(p=>p.Amount)));
 
             // Footer
 

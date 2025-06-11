@@ -68,3 +68,6 @@ Przygotuj bibliotekę `LabelGenerator`, która umożliwi drukowanie etykiet w fo
 ^FD123456^FS
 ^XZ
 ```
+
+## Wskazówka:
+- Można skorzystać z Online Viewer https://labelary.com/viewer.html

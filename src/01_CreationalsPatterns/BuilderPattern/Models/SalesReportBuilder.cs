@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BuilderPattern.Models;
 
@@ -34,45 +32,70 @@ public class Invoice
     }
 }
 
-
+// Leniwy budowniczy z zastosowaniem delegatów
 internal class SalesReportBuilder
 {
-    SalesReport salesReport;
-
     private IEnumerable<Order> _orders;
+
+    private List<Action<SalesReport>> _buildSteps = [];
 
     public SalesReportBuilder(IEnumerable<Order> orders)
     {
-        _orders = orders;
-        salesReport = new SalesReport();
+        _orders = orders;        
     }
 
-    public void AddHeader(string title)
+    public SalesReportBuilder AddHeader(string title)
+    {
+        _buildSteps.Add(report => AddHeaderStep(report, title));
+
+        return this;
+    }
+
+    private void AddHeaderStep(SalesReport salesReport, string title)
     {
         salesReport.Title = title;
         salesReport.CreateDate = DateTime.Now;
         salesReport.TotalSalesAmount = _orders.Sum(s => s.Amount);
     }
 
-    public void AddSectionProductDetails()
+    public SalesReportBuilder AddSectionProductDetails()
     {
-        salesReport.ProductDetails = _orders
-            .SelectMany(o => o.Details)
-            .GroupBy(o => o.Product)
-            .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
+        _buildSteps.Add(report => AddSectionProductDetailsStep(report));
+
+        return this;
     }
 
-    public void AddSectionGenderDetails()
+    private void AddSectionProductDetailsStep(SalesReport salesReport)
+    {
+        salesReport.ProductDetails = _orders
+                    .SelectMany(o => o.Details)
+                    .GroupBy(o => o.Product)
+                    .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
+    }
+
+    public SalesReportBuilder AddSectionGenderDetails()
+    {
+        _buildSteps.Add(report => AddSectionGenderDetailsStep(report));
+
+        return this;
+    }
+
+    private void AddSectionGenderDetailsStep(SalesReport salesReport)
     {
         salesReport.GenderDetails = _orders
             .GroupBy(o => o.Customer.Gender)
             .Select(g => new GenderReportDetail(g.Key, g.Count(), g.Sum(p => p.Amount)));
     }
 
-
-
     public SalesReport Build()
     {
+        var salesReport = new SalesReport();
+
+        foreach (var step in _buildSteps)
+        {
+            step(salesReport);
+        }
+
         return salesReport;
     }
 

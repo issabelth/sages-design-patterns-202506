@@ -35,7 +35,7 @@ Przygotuj bibliotekę `LabelGenerator`, która umożliwi drukowanie etykiet w fo
 - Kod ZPL
 ```
 ^XA
-^FDHello World
+^FDHello World^FS
 ^XZ
 ```
 
@@ -46,7 +46,7 @@ Przygotuj bibliotekę `LabelGenerator`, która umożliwi drukowanie etykiet w fo
 ```
 ^XA
 ^FO50,50
-^FDHello World
+^FDHello World^FS
 ^XZ
 ```
 4. **Przekroczenie limitów** (np. położenie poza obszarem etykiety) powinno rzucać wyjątek.
@@ -56,7 +56,7 @@ Przygotuj bibliotekę `LabelGenerator`, która umożliwi drukowanie etykiet w fo
 - Kod ZPL
 ```
 ^XA
-^ADN,36,20^FDYour Name
+^ADN,36,20^FDYour Name^FS
 ^XZ
 ```
 
@@ -69,3 +69,6 @@ Przygotuj bibliotekę `LabelGenerator`, która umożliwi drukowanie etykiet w fo
 ^FD123456^FS
 ^XZ
 ```
+
+## Wskazówka:
+- Można skorzystać z Online Viewer https://labelary.com/viewer.html

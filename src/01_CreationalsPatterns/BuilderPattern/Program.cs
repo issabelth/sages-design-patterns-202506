@@ -1,6 +1,7 @@
 ﻿using BuilderPattern.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace BuilderPattern
@@ -10,6 +11,10 @@ namespace BuilderPattern
         static void Main(string[] args)
         {
             Console.WriteLine("Hello Builder Pattern!");
+
+            DelegateTest();
+
+           //  return;
 
             Console.WriteLine(Invoice.GetTax());
 
@@ -24,6 +29,35 @@ namespace BuilderPattern
             // PersonTest();
 
             // RoomTest();
+        }
+
+        private static void DelegateTest()
+        {
+            Printer printer = new Printer();
+            printer.Log += LogToConsole;
+            printer.Log += LogToFile;
+            printer.Log += LogToDb;
+
+            printer.Log += Console.WriteLine;
+
+            printer.Log += (msg) => Console.WriteLine($"Lambda: {msg}");
+
+            printer.Print("Hello, World!", 3);
+        }
+
+        private static void LogToDb(string message)
+        {
+            Console.WriteLine($"Save to db {message}");
+        }
+
+        private static void LogToFile(string message)
+        {
+            File.AppendAllText("printer.log", message);
+        }
+
+        private static void LogToConsole(string message)
+        {
+            Console.WriteLine(message);
         }
 
         private static void PresentationBuilderTest()
@@ -85,9 +119,10 @@ namespace BuilderPattern
             IEnumerable<Order> orders = ordersService.Get();
 
             SalesReportBuilder builder = new SalesReportBuilder(orders);
-            builder.AddHeader("Raport sprzedaży");
-            // builder.AddSectionProductDetails();
-          //  builder.AddSectionGenderDetails();
+            builder
+                .AddHeader("Raport sprzedaży")
+                .AddSectionProductDetails()
+                .AddSectionGenderDetails(); // Fluent Api
 
             SalesReport salesReport = builder.Build();
 

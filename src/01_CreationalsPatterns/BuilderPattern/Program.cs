@@ -14,7 +14,7 @@ namespace BuilderPattern
 
             DelegateTest();
 
-            return;
+           //  return;
 
             Console.WriteLine(Invoice.GetTax());
 
@@ -36,8 +36,11 @@ namespace BuilderPattern
             Printer printer = new Printer();
             printer.Log += LogToConsole;
             printer.Log += LogToFile;
-            //printer.Log += LogToDb;
-            
+            printer.Log += LogToDb;
+
+            printer.Log += Console.WriteLine;
+
+            printer.Log += (msg) => Console.WriteLine($"Lambda: {msg}");
 
             printer.Print("Hello, World!", 3);
         }

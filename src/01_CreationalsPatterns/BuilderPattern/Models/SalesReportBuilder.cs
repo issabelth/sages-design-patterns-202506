@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BuilderPattern.Models;
 
@@ -34,29 +32,26 @@ public class Invoice
     }
 }
 
-
+// Leniwy budowniczy z zastosowaniem delegatów
 internal class SalesReportBuilder
 {
-    SalesReport salesReport;
-
     private IEnumerable<Order> _orders;
 
     private List<Action<SalesReport>> _buildSteps = [];
 
     public SalesReportBuilder(IEnumerable<Order> orders)
     {
-        _orders = orders;
-        salesReport = new SalesReport();
+        _orders = orders;        
     }
 
     public SalesReportBuilder AddHeader(string title)
     {
-        AddHeaderStep(title);
+        _buildSteps.Add(report => AddHeaderStep(report, title));
 
         return this;
     }
 
-    private void AddHeaderStep(string title)
+    private void AddHeaderStep(SalesReport salesReport, string title)
     {
         salesReport.Title = title;
         salesReport.CreateDate = DateTime.Now;
@@ -65,12 +60,12 @@ internal class SalesReportBuilder
 
     public SalesReportBuilder AddSectionProductDetails()
     {
-        AddSectionProductDetailsStep();
+        _buildSteps.Add(report => AddSectionProductDetailsStep(report));
 
         return this;
     }
 
-    private void AddSectionProductDetailsStep()
+    private void AddSectionProductDetailsStep(SalesReport salesReport)
     {
         salesReport.ProductDetails = _orders
                     .SelectMany(o => o.Details)
@@ -80,12 +75,12 @@ internal class SalesReportBuilder
 
     public SalesReportBuilder AddSectionGenderDetails()
     {
-        AddSectionGenderDetailsStep();
+        _buildSteps.Add(report => AddSectionGenderDetailsStep(report));
 
         return this;
     }
 
-    private void AddSectionGenderDetailsStep()
+    private void AddSectionGenderDetailsStep(SalesReport salesReport)
     {
         salesReport.GenderDetails = _orders
             .GroupBy(o => o.Customer.Gender)
@@ -94,6 +89,13 @@ internal class SalesReportBuilder
 
     public SalesReport Build()
     {
+        var salesReport = new SalesReport();
+
+        foreach (var step in _buildSteps)
+        {
+            step(salesReport);
+        }
+
         return salesReport;
     }
 

@@ -14,8 +14,7 @@ interface ILogger
 
 internal class Printer
 {
-    public delegate void LogDelegate(string msg);
-    public LogDelegate Log { get; set; }    // Zmienna, która przechowuje listę funkcji typu void (string)
+    public Action<string> Log { get; set; }    // Zmienna, która przechowuje listę funkcji typu void (string)
 
     public void Print(string content, int copies = 1)
     {

@@ -15,7 +15,7 @@ namespace FactoryMethodTemplate.UnitTests
             var result = controller.GetProducts();
 
             // Assert
-            Assert.AreEqual("View rendered by Razor", result);
+            Assert.AreEqual("View rendered by Hugo", result);
 
         }
     }

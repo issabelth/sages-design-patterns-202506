@@ -13,13 +13,13 @@ namespace SimpleFactoryPattern
             VisitCalculateAmountTest();
         }
 
-       
+
 
         private static void VisitCalculateAmountTest()
         {
             while (true)
             {
-                Console.Write("Podaj rodzaj wizyty: (N)FZ (P)rywatna (F)irma: ");
+                Console.Write("Podaj rodzaj wizyty: (N)FZ (P)rywatna (F)irma (T)eleporada:");
                 string visitType = Console.ReadLine();
 
                 Console.Write("Podaj czas wizyty w minutach: ");
@@ -27,17 +27,13 @@ namespace SimpleFactoryPattern
                 {
                     TimeSpan duration = TimeSpan.FromMinutes(minutes);
 
-                    Visit visit = new Visit(duration, 100);
+                    VisitFactory factory = new VisitFactory();
 
-                    decimal totalAmount = visit.CalculateCost(visitType);
+                    Visit visit = factory.Create(visitType, duration, 100);
 
-                    if (totalAmount == 0)
-                        Console.ForegroundColor = ConsoleColor.Green;
-                    else
-                       if (totalAmount >= 200)
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    else
-                        Console.ForegroundColor = ConsoleColor.White;
+                    decimal totalAmount = visit.CalculateCost();
+
+                    Console.ForegroundColor = ConsoleColorFactory.Create(totalAmount);
 
                     Console.WriteLine($"Total amount {totalAmount:C2}");
 
@@ -47,4 +43,15 @@ namespace SimpleFactoryPattern
 
         }
     }
+}
+
+
+public class ConsoleColorFactory
+{
+    public static ConsoleColor Create(decimal amount) => amount switch
+    {
+        0 => ConsoleColor.Green,
+        >= 200 => ConsoleColor.Red,
+        _ => ConsoleColor.White,
+    };
 }

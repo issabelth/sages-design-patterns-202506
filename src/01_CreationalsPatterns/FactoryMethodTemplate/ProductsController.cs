@@ -3,7 +3,7 @@ using FactoryMethodTemplate.Razor;
 
 namespace FactoryMethodTemplate
 {
-    public class ProductsController : Controller
+    public class ProductsController : HugoController
     {
         public string GetProducts()
         {

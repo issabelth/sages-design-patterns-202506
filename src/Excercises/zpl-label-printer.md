@@ -1,4 +1,5 @@
 # do testowania: https://labelary.com/viewer.html
+# link do zadania: https://github.com/sulmar/sages-design-patterns-202506/blob/main/src/Excercises/zpl-label-printer.md
 # Drukarka etykiet ZPL
 
 ## Opis

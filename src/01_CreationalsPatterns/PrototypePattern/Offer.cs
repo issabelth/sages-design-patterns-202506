@@ -19,3 +19,10 @@ public class Offer
     public override string ToString() =>
         $"{OfferNumber}: {Product} ({BasePrice:C} - {DiscountPercent}% = {GetFinalPrice():C}), valid until {ValidUntil:d}";
 }
+
+public class OfferOptions
+{
+    public bool IncludeInstallation { get; set; }
+    public bool ExtendedWarranty { get; set; }
+    public string Currency { get; set; } = "PLN";
+}

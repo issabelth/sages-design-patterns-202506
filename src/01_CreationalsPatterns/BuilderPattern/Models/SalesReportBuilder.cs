@@ -47,26 +47,33 @@ internal class SalesReportBuilder
         salesReport = new SalesReport();
     }
 
-    public void AddHeader(string title)
+    public SalesReportBuilder AddHeader(string title)
     {
         salesReport.Title = title;
         salesReport.CreateDate = DateTime.Now;
         salesReport.TotalSalesAmount = _orders.Sum(s => s.Amount);
+
+        return this;
     }
 
-    public void AddSectionProductDetails()
+    public SalesReportBuilder AddSectionProductDetails()
     {
         salesReport.ProductDetails = _orders
             .SelectMany(o => o.Details)
             .GroupBy(o => o.Product)
             .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
+
+        return this;
     }
 
-    public void AddSectionGenderDetails()
+    public SalesReportBuilder AddSectionGenderDetails()
     {
         salesReport.GenderDetails = _orders
             .GroupBy(o => o.Customer.Gender)
             .Select(g => new GenderReportDetail(g.Key, g.Count(), g.Sum(p => p.Amount)));
+
+
+        return this;
     }
 
 

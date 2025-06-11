@@ -85,9 +85,10 @@ namespace BuilderPattern
             IEnumerable<Order> orders = ordersService.Get();
 
             SalesReportBuilder builder = new SalesReportBuilder(orders);
-            builder.AddHeader("Raport sprzedaży");
-            // builder.AddSectionProductDetails();
-          //  builder.AddSectionGenderDetails();
+            builder
+                .AddHeader("Raport sprzedaży")
+                .AddSectionProductDetails()
+                .AddSectionGenderDetails(); // Fluent Api
 
             SalesReport salesReport = builder.Build();
 

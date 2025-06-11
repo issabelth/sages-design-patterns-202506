@@ -11,6 +11,10 @@ namespace BuilderPattern
         {
             Console.WriteLine("Hello Builder Pattern!");
 
+            Console.WriteLine(Invoice.GetTax());
+
+            Invoice invoice = Invoice.Create();
+
             // PresentationBuilderTest();
 
             //PhoneTest();
@@ -80,29 +84,23 @@ namespace BuilderPattern
             FakeOrdersService ordersService = new FakeOrdersService();
             IEnumerable<Order> orders = ordersService.Get();
 
-            SalesReport salesReport = new SalesReport();
+            SalesReportBuilder builder = new SalesReportBuilder(orders);
+            builder.AddHeader("Raport sprzedaży");
+            // builder.AddSectionProductDetails();
+          //  builder.AddSectionGenderDetails();
 
-            // Header
-            salesReport.Title = "Raport sprzedaży";
-            salesReport.CreateDate = DateTime.Now;
-            salesReport.TotalSalesAmount = orders.Sum(s => s.Amount);
-
-            // Content          
-            salesReport.ProductDetails = orders
-                .SelectMany(o => o.Details)
-                .GroupBy(o => o.Product)
-                .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
-
-
-            salesReport.GenderDetails = orders
-                .GroupBy(o => o.Customer.Gender)
-                .Select( g => new GenderReportDetail(g.Key, g.Count(), g.Sum(p=>p.Amount)));
+            SalesReport salesReport = builder.Build();
 
             // Footer
 
             Console.WriteLine(salesReport);
 
         }
+
+       
+
+     
+       
 
         private static void PhoneTest()
         {

@@ -14,7 +14,15 @@ public class Offer
     public decimal DiscountPercent { get; set; }
     public DateTime ValidUntil { get; set; }
 
-    public decimal GetFinalPrice() => BasePrice * (1 - DiscountPercent / 100);
+    public OfferOptions Options { get; set; } = new(); // <--- zagnieżdżony obiekt
+
+    public decimal GetFinalPrice()
+    {
+        var price = BasePrice * (1 - DiscountPercent / 100);
+        if (Options.IncludeInstallation) price += 200; // np. koszt montażu
+        if (Options.ExtendedWarranty) price += 150;
+        return price;
+    }
 
     public override string ToString() =>
         $"{OfferNumber}: {Product} ({BasePrice:C} - {DiscountPercent}% = {GetFinalPrice():C}), valid until {ValidUntil:d}";

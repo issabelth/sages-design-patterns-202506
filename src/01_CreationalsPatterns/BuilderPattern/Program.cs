@@ -11,6 +11,23 @@ namespace BuilderPattern
         {
             Console.WriteLine("Hello Builder Pattern!");
 
+            Console.WriteLine(Invoice.GetTax());
+
+            Invoice invoice = Invoice.Create();
+
+            // PresentationBuilderTest();
+
+            //PhoneTest();
+
+             SalesReportTest();
+
+            // PersonTest();
+
+            // RoomTest();
+        }
+
+        private static void PresentationBuilderTest()
+        {
             Presentation presentation = new Presentation();
             presentation.AddSlide(new Slide("a"));
             presentation.AddSlide(new Slide("b"));
@@ -22,14 +39,6 @@ namespace BuilderPattern
             director.Build(presentation);
 
             var product = presentationBuilder.Build();
-
-            //PhoneTest();
-
-            // SalesReportTest();
-
-            // PersonTest();
-
-            // RoomTest();
         }
 
         private static void RoomTest()
@@ -75,24 +84,23 @@ namespace BuilderPattern
             FakeOrdersService ordersService = new FakeOrdersService();
             IEnumerable<Order> orders = ordersService.Get();
 
-            SalesReport salesReport = new SalesReport();
+            SalesReportBuilder builder = new SalesReportBuilder(orders);
+            builder.AddHeader("Raport sprzedaży");
+            // builder.AddSectionProductDetails();
+          //  builder.AddSectionGenderDetails();
 
-            // Header
-            salesReport.Title = "Raport sprzedaży";
-            salesReport.CreateDate = DateTime.Now;
-            salesReport.TotalSalesAmount = orders.Sum(s => s.Amount);
-
-            // Content          
-            salesReport.ProductDetails = orders
-                .SelectMany(o => o.Details)
-                .GroupBy(o => o.Product)
-                .Select(g => new ProductReportDetail(g.Key, g.Sum(p => p.Quantity), g.Sum(p => p.LineTotal)));
+            SalesReport salesReport = builder.Build();
 
             // Footer
 
             Console.WriteLine(salesReport);
 
         }
+
+       
+
+     
+       
 
         private static void PhoneTest()
         {
